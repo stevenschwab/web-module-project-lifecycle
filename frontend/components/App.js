@@ -29,7 +29,7 @@ export default class App extends React.Component {
 
   handleChange = e => {
     e.preventDefault();
-    this.setState({ newTodoName: e.target.value })
+    this.setState({ newTodoName: e.target.value });
   }
 
   submit = async (e) => {
@@ -47,10 +47,18 @@ export default class App extends React.Component {
     }
   }
 
-  hideCompleted = e => {
-    e.preventDefault()
+  hideCompleted = () => {
     const { todos, hideCompleted} = this.state;
-    this.setState({ filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted })
+    this.setState({ filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted });
+  }
+
+  toggleTodo = async (id) => {
+    try {
+      await axios.patch(`${URL}/${id}`);
+      this.fetchTodos();
+    } catch (error) {
+      console.log('Error toggling todos:', error)
+    }
   }
 
   render() {
@@ -58,9 +66,9 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <TodoList todos={hideCompleted ? filteredTodos : todos} />
+        <TodoList todos={hideCompleted ? filteredTodos : todos} toggleTodo={this.toggleTodo} />
         <Form submit={this.submit} newTodoName={newTodoName} handleChange={this.handleChange} />
-        <button onClick={this.hideCompleted}>Hide Completed</button>
+        <button onClick={this.hideCompleted}>{hideCompleted ? 'Show' : 'Hide'} Completed</button>
       </div>
     )
   }
