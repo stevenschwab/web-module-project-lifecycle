@@ -10,7 +10,9 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
-      newTodoName: ''
+      newTodoName: '',
+      filteredTodos: [],
+      hideCompleted: false
     };
   }
 
@@ -45,12 +47,20 @@ export default class App extends React.Component {
     }
   }
 
+  hideCompleted = e => {
+    e.preventDefault()
+    const { todos, hideCompleted} = this.state;
+    this.setState({ filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted })
+  }
+
   render() {
+    const { todos, filteredTodos, newTodoName, hideCompleted} = this.state;
+
     return (
       <div>
-        <TodoList todos={this.state.todos} />
-        <Form submit={this.submit} newTodoName={this.state.newTodoName} handleChange={this.handleChange} />
-        <button>Hide Completed</button>
+        <TodoList todos={hideCompleted ? filteredTodos : todos} />
+        <Form submit={this.submit} newTodoName={newTodoName} handleChange={this.handleChange} />
+        <button onClick={this.hideCompleted}>Hide Completed</button>
       </div>
     )
   }
