@@ -10,6 +10,7 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
+      error: '',
       newTodoName: '',
       filteredTodos: [],
       hideCompleted: false
@@ -21,7 +22,9 @@ export default class App extends React.Component {
       .then(res => {
         this.setState({ ...this.state, todos: res.data.data })
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        this.setState({ ...this.state, error: err.response.data.message})
+      })
   }
 
   componentDidMount() {
@@ -63,11 +66,11 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { todos, filteredTodos, newTodoName, hideCompleted} = this.state;
+    const { todos, filteredTodos, newTodoName, hideCompleted, error} = this.state;
 
     return (
       <div>
-        <div id="error">Error: No error here</div>
+        {error && <div id="error">Error: {error}</div>}
         <TodoList todos={hideCompleted ? filteredTodos : todos} toggleTodo={this.toggleTodo} />
         <Form submit={this.submit} newTodoName={newTodoName} handleChange={this.handleChange} />
         <button onClick={this.hideCompleted}>{hideCompleted ? 'Show' : 'Hide'} Completed</button>
