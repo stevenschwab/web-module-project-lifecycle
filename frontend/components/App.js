@@ -32,23 +32,24 @@ export default class App extends React.Component {
   }
 
   handleChange = e => {
-    e.preventDefault();
-    this.setState({ newTodoName: e.target.value });
+    const { value } = e.target
+    this.setState({ ...this.state, newTodoName: value });
   }
 
-  submit = async (e) => {
+  postNewTodo = () => {
+    axios.post(URL, { name: this.state.newTodoName })
+      .then(res => {
+        this.fetchTodos();
+        this.setState({ newTodoName: '' });
+      })
+      .catch(err => {
+        this.setState({ ...this.state, error: err.response.data.message })
+      })
+  }
+
+  submit = e => {
     e.preventDefault();
-    const todo = {
-      name: this.state.newTodoName,
-      completed: false
-    }
-    try {
-      await axios.post(URL, todo)
-      this.fetchTodos();
-      this.setState({ newTodoName: '' });
-    } catch (error) {
-      console.error("Failed to add todo:", error);
-    }
+    this.postNewTodo();
   }
 
   hideCompleted = () => {
