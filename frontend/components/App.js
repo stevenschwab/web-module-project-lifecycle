@@ -17,9 +17,10 @@ export default class App extends React.Component {
   }
 
   fetchTodos = () => {
-    fetch(URL)
-      .then(res => res.json())
-      .then(todos => this.setState({ todos: todos.data }))
+    axios.get(URL)
+      .then(res => {
+        this.setState({ ...this.state, todos: res.data.data })
+      })
       .catch(err => console.log(err))
   }
 
@@ -66,6 +67,7 @@ export default class App extends React.Component {
 
     return (
       <div>
+        <div id="error">Error: No error here</div>
         <TodoList todos={hideCompleted ? filteredTodos : todos} toggleTodo={this.toggleTodo} />
         <Form submit={this.submit} newTodoName={newTodoName} handleChange={this.handleChange} />
         <button onClick={this.hideCompleted}>{hideCompleted ? 'Show' : 'Hide'} Completed</button>
