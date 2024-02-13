@@ -58,10 +58,13 @@ export default class App extends React.Component {
     this.setState({ ...this.state, filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted });
   }
 
-  toggleTodo = (id) => {
+  toggleTodo = id => {
     axios.patch(`${URL}/${id}`)
       .then(res => {
-        this.fetchTodos();
+        this.setState({ ...this.state, todos: this.state.todos.map(todo => {
+          if (todo.id !== id) return todo;
+          return res.data.data;
+        }) })
       })
       .catch(this.setAxiosResponseError)
   }
