@@ -39,9 +39,10 @@ export default class App extends React.Component {
   setAxiosResponseError = err => this.setState({ ...this.state, error: err.response.data.message })
 
   postNewTodo = () => {
-    axios.post(URL, { name: this.state.newTodoName })
+    const { newTodoName, todos } = this.state;
+    axios.post(URL, { name: newTodoName })
       .then(res => {
-        this.fetchTodos();
+        this.setState({ ...this.state, todos: todos.concat(res.data.data) })
         this.resetForm();
       })
       .catch(this.setAxiosResponseError)
