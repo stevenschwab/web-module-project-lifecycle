@@ -22,9 +22,7 @@ export default class App extends React.Component {
       .then(res => {
         this.setState({ ...this.state, todos: res.data.data })
       })
-      .catch(err => {
-        this.setState({ ...this.state, error: err.response.data.message})
-      })
+      .catch(this.setAxiosResponseError)
   }
 
   componentDidMount() {
@@ -36,15 +34,17 @@ export default class App extends React.Component {
     this.setState({ ...this.state, newTodoName: value });
   }
 
+  resetForm = () => this.setState({ ...this.state, newTodoName: '' })
+
+  setAxiosResponseError = err => this.setState({ ...this.state, error: err.response.data.message })
+
   postNewTodo = () => {
     axios.post(URL, { name: this.state.newTodoName })
       .then(res => {
         this.fetchTodos();
-        this.setState({ newTodoName: '' });
+        this.resetForm();
       })
-      .catch(err => {
-        this.setState({ ...this.state, error: err.response.data.message })
-      })
+      .catch(this.setAxiosResponseError)
   }
 
   submit = e => {
@@ -54,16 +54,15 @@ export default class App extends React.Component {
 
   hideCompleted = () => {
     const { todos, hideCompleted} = this.state;
-    this.setState({ filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted });
+    this.setState({ ...this.state, filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted });
   }
 
-  toggleTodo = async (id) => {
-    try {
-      await axios.patch(`${URL}/${id}`);
-      this.fetchTodos();
-    } catch (error) {
-      console.log('Error toggling todos:', error)
-    }
+  toggleTodo = (id) => {
+    axios.patch(`${URL}/${id}`)
+      .then(res => {
+        this.fetchTodos();
+      })
+      .catch(this.setAxiosResponseError)
   }
 
   render() {
