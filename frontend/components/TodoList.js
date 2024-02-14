@@ -10,7 +10,11 @@ export default class TodoList extends React.Component {
         {
           todos.reduce((acc, todo) => {
             if (!hideCompleted || !todo.completed) return acc.concat(
-              <Todo toggleTodo={toggleTodo} key={todo.id} todo={todo} />
+              <Todo 
+                toggleTodo={toggleTodo} 
+                key={todo.id} 
+                todo={todo} 
+              />
             )
             return acc
           }, [])
