@@ -12,7 +12,6 @@ export default class App extends React.Component {
       todos: [],
       error: '',
       newTodoName: '',
-      filteredTodos: [],
       hideCompleted: false
     };
   }
@@ -53,9 +52,8 @@ export default class App extends React.Component {
     this.postNewTodo();
   }
 
-  hideCompleted = () => {
-    const { todos, hideCompleted} = this.state;
-    this.setState({ ...this.state, filteredTodos: todos.filter(todo => !todo.completed), hideCompleted: !hideCompleted });
+  toggleCompleted = () => {
+    this.setState({ ...this.state, hideCompleted: !this.state.hideCompleted });
   }
 
   toggleTodo = id => {
@@ -70,14 +68,18 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { todos, filteredTodos, newTodoName, hideCompleted, error} = this.state;
-
+    const { todos, newTodoName, hideCompleted, error} = this.state;
     return (
       <div>
         {error && <div id="error">Error: {error}</div>}
-        <TodoList hideCompleted={hideCompleted} todos={hideCompleted ? filteredTodos : todos} toggleTodo={this.toggleTodo} />
-        <Form submit={this.submit} newTodoName={newTodoName} handleChange={this.handleChange} />
-        <button onClick={this.hideCompleted}>{hideCompleted ? 'Show' : 'Hide'} Completed</button>
+        <TodoList hideCompleted={hideCompleted} todos={todos} toggleTodo={this.toggleTodo} />
+        <Form 
+          toggleCompleted={this.toggleCompleted} 
+          submit={this.submit} 
+          newTodoName={newTodoName} 
+          handleChange={this.handleChange} 
+          hideCompleted={hideCompleted}
+        />
       </div>
     )
   }
