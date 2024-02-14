@@ -56,7 +56,7 @@ export default class App extends React.Component {
     this.setState({ ...this.state, hideCompleted: !this.state.hideCompleted });
   }
 
-  toggleTodo = id => {
+  toggleTodo = id => () => {
     axios.patch(`${URL}/${id}`)
       .then(res => {
         this.setState({ ...this.state, todos: this.state.todos.map(todo => {
