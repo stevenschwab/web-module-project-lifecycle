@@ -72,7 +72,11 @@ export default class App extends React.Component {
     return (
       <div>
         {error && <div id="error">Error: {error}</div>}
-        <TodoList hideCompleted={hideCompleted} todos={todos} toggleTodo={this.toggleTodo} />
+        <TodoList 
+          hideCompleted={hideCompleted} 
+          todos={todos} 
+          toggleTodo={this.toggleTodo} 
+        />
         <Form 
           toggleCompleted={this.toggleCompleted} 
           submit={this.submit} 
